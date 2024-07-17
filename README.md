@@ -5,9 +5,19 @@ Command line tool for compressing images using the TinyPNG API
 
 ## Different
 
-1. No terminal display or no output display
+1. No terminal display or no output display on Windows
 
 2. Replacing Printing with Windows Toast Notifications
+
+3. Windows toast notifications support click to open image
+
+4. Send different emojis according to the ratio
+(1) 😋: 0.4 < ratio < 1
+(2) 🙂: 0.3 < ratio <= 0.4
+(3) 😶: 0.2 < ratio <= 0.3
+(4) 😧: 0.1 < ratio <= 0.2
+(5) 😨: 0.05 < ratio <= 0.1
+(5) 🤡: ratio <= 0.05
 
 ## Usage
 
@@ -25,9 +35,22 @@ tinypng -k <KEY>
 
 ```sh
 tinypng ./test.png
-# test.png: Origin: 1004.7 KB Compressed: 245.4 KB(75.6%)
+# compress by TinyPNG
+# test.png
+# 1004.7 KB => 245.4 KB (75.6%) 😋
 
 # Glob
 tinypng ./images/*.png
-# images/test.png: Origin: 1.4 MB Compressed: 174.5 KB(87.8%)
+# compress by TinyPNG
+# test1.png
+# 1 MB => 200 KB (80.0%) 😋
+
+# compress by TinyPNG
+# test2.png
+# 1004.7 KB => 245.4 KB (75.6%) 😋
+
+# compress by TinyPNG
+# test3.png
+# 1.4 MB => 174.5 KB (87.8%) 😋
+...
 ```

@@ -50,12 +50,19 @@ async fn main() {
         hc.save_toml(&config).unwrap_or_else(|err| {
             exit!("{:#?}", err);
         });
-        println!("Set API KEY successfully");
+
+        WinToastNotify::new()
+            .set_title("Successfully set the API KEY for TinyPNG")
+            .show()
+            .expect("Failed to show toast notification");
+        
         return;
     }
 
     if config.key.len() != 32 {
-        exit!("Invalid API KEY\n1. Register a KEY using your email at {REGISTER_URL}\n2. Use 'tinypng -k <KEY>' to set API_KEY");
+        exit!("Invalid API KEY
+            \n1. Register a KEY using your email at {REGISTER_URL}
+            \n2. Use 'tinypng -k <KEY>' to set API_KEY");
     }
 
     let tiny = Arc::new(TinyPng::new(config.key));
@@ -103,6 +110,7 @@ async fn main() {
         match rst {
             Ok((rst, p)) => match rst {
                 Ok((input, output)) => {
+                    let path_string = p.to_string_lossy().into_owned();
                     let ratio = (1.0 - (output as f32 / input as f32)) * 100.0;
                     let (input, output) = (format_size(input), format_size(output));
                     let logo_path_str = match env::var_os("USERPROFILE") {
@@ -113,12 +121,25 @@ async fn main() {
                         },
                         None => String::new(),
                     };
-      
+                    let emojis = [
+                        (40.0, "😋"),
+                        (30.0, "🙂"),
+                        (20.0, "😶"),
+                        (10.0, "😧"),
+                        (5.0, "😨"),
+                        (0.1, "🤡"),
+                    ];
+                    let variation = emojis.iter()
+                        .find(|&&(threshold, _)| ratio > threshold)
+                        .map(|&(_, emoji)| format!("{} ⇒ {} ({:.1}%) {}", input, output, ratio, emoji))
+                        .unwrap_or_else(|| format!("{} ⇒ {} ({:.1}%) 🤡", input, output, ratio));
+
                     WinToastNotify::new()
-                        .set_title("compress by TinyPNG")
+                        .set_notif_open(&path_string)
+                        .set_title("Compress by TinyPNG")
                         .set_messages(vec![
-                            &p.to_string_lossy().into_owned(),
-                            &format!("{} => {} ({:.1}%)", input, output, ratio)
+                            &path_string,
+                            &variation,
                         ])
                         .set_logo(&logo_path_str, CropCircle::True)
                         .set_audio(Audio::WinLoopingAlarm5, Loop::False)
