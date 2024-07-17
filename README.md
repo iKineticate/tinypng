@@ -3,15 +3,11 @@
 
 Command line tool for compressing images using the TinyPNG API
 
-## Install
+## Different
 
-[Download](https://github.com/wyhaya/tinypng/releases) the binary from the release page
+1. No terminal display or no output display
 
-Or use `cargo` to install
-
-```bash
-cargo install tinypng
-```
+2. Replacing Printing with Windows Toast Notifications
 
 ## Usage
 

@@ -1,3 +1,4 @@
+#![windows_subsystem = "windows"]
 mod utils;
 use clap::{Arg, Command};
 use futures_util::stream::{FuturesUnordered, StreamExt};
@@ -7,8 +8,10 @@ use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 use std::path::PathBuf;
 use std::sync::Arc;
+use std::env;
 use tinypng::{TinyPng, REGISTER_URL};
 use utils::format_size;
+use win_toast_notify::*;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 struct Config {
@@ -102,13 +105,25 @@ async fn main() {
                 Ok((input, output)) => {
                     let ratio = (1.0 - (output as f32 / input as f32)) * 100.0;
                     let (input, output) = (format_size(input), format_size(output));
-                    println!(
-                        "{}: Origin: {} Compressed: {}({:.1}%)",
-                        p.display(),
-                        input,
-                        output,
-                        ratio
-                    );
+                    let logo_path_str = match env::var_os("USERPROFILE") {
+                        Some(user_profile) => {
+                            let mut path_buf = PathBuf::from(user_profile);
+                            path_buf.push(r"OneDrive\Archive\icon\PNG\tinypng.png");
+                            path_buf.to_string_lossy().into_owned()
+                        },
+                        None => String::new(),
+                    };
+      
+                    WinToastNotify::new()
+                        .set_title("compress by TinyPNG")
+                        .set_messages(vec![
+                            &p.to_string_lossy().into_owned(),
+                            &format!("{} => {} ({:.1}%)", input, output, ratio)
+                        ])
+                        .set_logo(&logo_path_str, CropCircle::True)
+                        .set_audio(Audio::WinLoopingAlarm5, Loop::False)
+                        .show()
+                        .expect("Failed to show toast notification")
                 }
                 Err(err) => {
                     eprintln!("{}: {:?}", p.display(), err);
