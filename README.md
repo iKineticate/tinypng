@@ -9,15 +9,21 @@ Command line tool for compressing images using the TinyPNG API
 
 2. Replacing Printing with Windows Toast Notifications
 
-3. Windows toast notifications support click to open image
+3. Windows toast notifications support click to open the image
 
 4. Send different emojis according to the ratio
-(1) 😋: 0.4 < ratio < 1
-(2) 🙂: 0.3 < ratio <= 0.4
-(3) 😶: 0.2 < ratio <= 0.3
-(4) 😧: 0.1 < ratio <= 0.2
-(5) 😨: 0.05 < ratio <= 0.1
-(5) 🤡: ratio <= 0.05
+
+😋: 0.4 < ratio < 1
+
+🙂: 0.3 < ratio <= 0.4
+
+😶: 0.2 < ratio <= 0.3
+
+😧: 0.1 < ratio <= 0.2
+
+😨: 0.05 < ratio <= 0.1
+
+🤡: ratio <= 0.05
 
 ## Usage
 
