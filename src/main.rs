@@ -59,6 +59,7 @@ async fn main() {
 
         WinToastNotify::new()
             .set_title("Successfully set the API KEY for TinyPNG")
+            .set_logo(logo_path.to_str().expect("The icon path is an invalid Unicode"), CropCircle::True)
             .show()
             .expect("Failed to show toast notification");
         
@@ -147,10 +148,20 @@ async fn main() {
                         .expect("Failed to show toast notification")
                 }
                 Err(err) => {
+                    WinToastNotify::new()
+                        .set_title(&format!("{}: {:?}", p.display(), err))
+                        .set_logo(logo_path.to_str().expect("The icon path is an invalid Unicode"), CropCircle::True)
+                        .show()
+                        .expect("Failed to show toast notification");
                     eprintln!("{}: {:?}", p.display(), err);
                 }
             },
             Err(err) => {
+                WinToastNotify::new()
+                    .set_title(&format!("Failed to run task {:?}", err))
+                    .set_logo(logo_path.to_str().expect("The icon path is an invalid Unicode"), CropCircle::True)
+                    .show()
+                    .expect("Failed to show toast notification");
                 eprintln!("Failed to run task {:?}", err);
             }
         }
