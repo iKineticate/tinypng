@@ -13,17 +13,21 @@ Command line tool for compressing images using the TinyPNG API
 
 4. Send different emojis according to the ratio
 
-😋: 0.4 < ratio < 1
+🥰: 80% < ratio
 
-🙂: 0.3 < ratio <= 0.4
+🥳: 60% < ratio <= 80%
 
-😶: 0.2 < ratio <= 0.3
+😋: 40% < ratio <= 60%
 
-😧: 0.1 < ratio <= 0.2
+😚: 30% < ratio <= 40%
 
-😨: 0.05 < ratio <= 0.1
+🙂: 20% < ratio <= 30%
 
-🤡: ratio <= 0.05
+😧: 10% < ratio <= 20%
+
+😨: 5% < ratio <= 10%
+
+🤡: ratio <= 1%
 
 ## Usage
 
@@ -43,17 +47,17 @@ tinypng -k <KEY>
 tinypng ./test.png
 # compress by TinyPNG
 # test.png
-# 1004.7 KB => 245.4 KB (75.6%) 😋
+# 1004.7 KB => 245.4 KB (75.6%) 🥳
 
 # Glob
 tinypng ./images/*.png
 # compress by TinyPNG
 # test1.png
-# 1 MB => 200 KB (80.0%) 😋
+# 1 MB => 100 KB (90.0%) 🥰
 
 # compress by TinyPNG
 # test2.png
-# 1004.7 KB => 245.4 KB (75.6%) 😋
+# 1004.7 KB => 245.4 KB (75.6%) 🥳
 
 # compress by TinyPNG
 # test3.png
