@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 use std::path::PathBuf;
 use std::sync::Arc;
+use std::fs::write;
 use std::env;
 use tinypng::{TinyPng, REGISTER_URL};
 use utils::format_size;
@@ -20,6 +21,11 @@ struct Config {
 
 #[tokio::main]
 async fn main() {
+    // Adding the logo resources to a user's temporary folder
+    let logo_path = env::temp_dir().join("TinyPng.png");
+    let icon_data = include_bytes!("TinyPng.png");
+    write(&logo_path, icon_data).expect("Unable to write file");
+
     let app = Command::new(env!("CARGO_PKG_NAME"))
         .version(env!("CARGO_PKG_VERSION"))
         .arg(
@@ -113,21 +119,15 @@ async fn main() {
                     let path_string = p.to_string_lossy().into_owned();
                     let ratio = (1.0 - (output as f32 / input as f32)) * 100.0;
                     let (input, output) = (format_size(input), format_size(output));
-                    let logo_path_str = match env::var_os("USERPROFILE") {
-                        Some(user_profile) => {
-                            let mut path_buf = PathBuf::from(user_profile);
-                            path_buf.push(r"OneDrive\Archive\icon\PNG\tinypng.png");
-                            path_buf.to_string_lossy().into_owned()
-                        },
-                        None => String::new(),
-                    };
                     let emojis = [
+                        (80.0, "🥰"),
+                        (60.0, "🥳"),
                         (40.0, "😋"),
-                        (30.0, "🙂"),
-                        (20.0, "😶"),
+                        (30.0, "😚"),
+                        (20.0, "🙂"),
                         (10.0, "😧"),
                         (5.0, "😨"),
-                        (0.1, "🤡"),
+                        (1.0, "🤡"),
                     ];
                     let variation = emojis.iter()
                         .find(|&&(threshold, _)| ratio > threshold)
@@ -141,7 +141,7 @@ async fn main() {
                             &path_string,
                             &variation,
                         ])
-                        .set_logo(&logo_path_str, CropCircle::True)
+                        .set_logo(logo_path.to_str().expect("The icon path is an invalid Unicode"), CropCircle::True)
                         .set_audio(Audio::WinLoopingAlarm5, Loop::False)
                         .show()
                         .expect("Failed to show toast notification")
