@@ -23,20 +23,16 @@ struct Config {
 async fn main() {
     // Adding the logo resources to a user's temporary folder
     let logo_path = env::temp_dir().join("TinyPng.png");
+    let icon_data = include_bytes!("TinyPng.png");
+
     match logo_path.try_exists() {
         Ok(true) => {
-            if logo_path.is_file() {
-                let icon_data = include_bytes!("TinyPng.png");
+            if !logo_path.is_file() {
                 write(&logo_path, icon_data).expect("Unable to write file");
             }
         },
         Ok(false) => {
-            WinToastNotify::new()
-                .set_title(&format!("The logo path does not exist. {:?}", logo_path))
-                .set_logo(logo_path.to_str().expect("The icon path is an invalid Unicode"), CropCircle::True)
-                .show()
-                .expect("Failed to show toast notification");
-            eprintln!("The logo path does not exist.");
+            write(&logo_path, icon_data).expect("Unable to write file");
         },
         Err(err) => {
             WinToastNotify::new()
@@ -158,12 +154,13 @@ async fn main() {
                         .unwrap_or_else(|| format!("{} ⇒ {} ({:.1}%) 🤡", input, output, ratio));
 
                     WinToastNotify::new()
-                        .set_notif_open(&path_string)
+                        .set_open(&path_string)
                         .set_title("Compress by TinyPNG")
                         .set_messages(vec![
                             &path_string,
                             &variation,
                         ])
+                        .set_image(&path_string, ImagePlacement::Top)
                         .set_logo(logo_path.to_str().expect("The icon path is an invalid Unicode"), CropCircle::True)
                         .set_audio(Audio::WinLoopingAlarm5, Loop::False)
                         .show()
