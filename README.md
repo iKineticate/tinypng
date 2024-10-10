@@ -11,7 +11,7 @@ Command line tool for compressing images using the TinyPNG API
 
 3. Windows toast notifications support click to open the image
 
-4. Send different emojis according to the ratio
+4. Send different emojis according to the compression ratio
 
 🥰: 80% < ratio
 

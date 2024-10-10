@@ -22,8 +22,8 @@ struct Config {
 #[tokio::main]
 async fn main() {
     // Adding the logo resources to a user's temporary folder
-    let logo_path = env::temp_dir().join("TinyPng.png");
-    let icon_data = include_bytes!("TinyPng.png");
+    let logo_path = env::temp_dir().join("tinypng.png");
+    let icon_data = include_bytes!("../resources/tinypng.png");
 
     match logo_path.try_exists() {
         Ok(true) => {
